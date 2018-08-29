@@ -42,12 +42,19 @@
 # [*files_baseurl*]
 #   Base URL for static OpenVPN config files and keys. Defaults to
 #   'puppet:///files'.
+# [*use_client_service*]
+#   Force use of the "client" system service instead of the generic one. This is 
+#   useful on recent OpenVPN packages on systemd distros that make a distinction 
+#   between client, server and generic connections. It affects the location of 
+#   the configuration and status file as well as the contents of monit 
+#   configuration fragment. Valid values are true and false (default).
 #
 define openvpn::client::inline
 (
     Boolean          $manage_packetfilter = true,
     Boolean          $manage_monit = true,
     Boolean          $enable_service = true,
+    Boolean          $use_client_service = false,
     String           $tunif = 'tun10',
     Optional[String] $files_baseurl = undef,
     Optional[String] $clientname = undef
@@ -64,5 +71,6 @@ define openvpn::client::inline
         enable_service      => $enable_service,
         tunif               => $tunif,
         clientname          => $clientname,
+        use_client_service  => $use_client_service,
     }
 }

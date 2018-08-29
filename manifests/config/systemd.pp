@@ -16,9 +16,13 @@ define openvpn::config::systemd {
     include ::openvpn::params
     include ::systemd
 
-    systemd::service_override { "openvpn-openvpn@.service.${title}":
-        ensure        => 'present',
-        service_name  => 'openvpn@',
-        template_path => "openvpn/openvpn@.service.${title}.erb",
+    $services = ['openvpn','openvpn-client','openvpn-server']
+
+    $services.each |$service| {
+        systemd::service_override { "openvpn-${service}@.service.${title}":
+            ensure        => 'present',
+            service_name  => "${service}@",
+            template_path => "openvpn/openvpn@.service.${title}.erb",
+        }
     }
 }

@@ -82,9 +82,14 @@ class openvpn
 
     include ::openvpn::install
 
-    # Debian 8.x and CentOS 7 do not create pidfiles by default -> fix
-    if $::lsbdistcodename == 'jessie' {
-        ::openvpn::config::systemd { 'jessie': }
+    # Most systemd distros do not create pidfiles by default -> fix.
+    #
+    # Regexps require string values on both sides, so we need first to
+    # check for presence of $::lsbdistcodename.
+    if $::lsbdistcodename {
+        if $::lsbdistcodename =~ /^(jessie|stretch)$/ {
+            ::openvpn::config::systemd { $::lsbdistcodename: }
+        }
     }
     if ($facts['os']['family'] == 'RedHat') and ($facts['os']['release']['major'] == '7') {
         include ::openvpn::config::centos7

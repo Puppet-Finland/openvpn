@@ -13,6 +13,7 @@ define openvpn::client::generic
     Boolean           $dynamic,
     Optional[String]  $files_baseurl = undef,
     Boolean           $enable_service = true,
+    Boolean           $use_client_service = false,
     String            $tunif='tun10',
     Optional[String]  $remote_ip = undef,
     Optional[Integer] $remote_port = undef,
@@ -37,6 +38,16 @@ define openvpn::client::generic
     # Manage various operating system differences
     $ext = $::openvpn::params::config_ext
 
+    if $use_client_service {
+        $basedir          = "${::openvpn::params::config_dir}/client"
+        $service_basename = 'openvpn-client'
+        $monit_service_type = 'client'
+    } else {
+        $basedir = $::openvpn::params::config_dir
+        $service_basename = 'openvpn'
+        $monit_service_type = undef
+    }
+
     if $::facts['kernel'] == 'windows' {
         $config = "${::openvpn::params::config_dir}\\${title}.${ext}"
         $status = "${::openvpn::params::config_dir}\\openvpn-${title}-status.log"
@@ -44,8 +55,8 @@ define openvpn::client::generic
         $l_manage_packetfilter = false
     } else {
         # UNIX-style operating system is assumed
-        $config = "${::openvpn::params::config_dir}/${title}.${ext}"
-        $status = "${::openvpn::params::config_dir}/openvpn-${title}-status.log"
+        $config = "${basedir}/${title}.${ext}"
+        $status = "${basedir}/openvpn-${title}-status.log"
         $l_manage_monit = $manage_monit
 
         # Only iptables/ip6tables is supported right now, so *BSD is ruled out
@@ -106,16 +117,17 @@ define openvpn::client::generic
         }
 
         if $enable_service {
-            file { "openvpn@${title}.service":
+
+            file { "${service_basename}@${title}.service":
                 ensure  => link,
-                path    => "/etc/systemd/system/multi-user.target.wants/openvpn@${title}.service",
-                target  => '/usr/lib/systemd/system/openvpn@.service',
+                path    => "/etc/systemd/system/multi-user.target.wants/${service_basename}@${title}.service",
+                target  => "/usr/lib/systemd/system/${service_basename}@.service",
                 require => File["openvpn-${title}.conf"],
             }
         } else {
-            file { "openvpn@${title}.service":
+            file { "${service_basename}@${title}.service":
                 ensure => absent,
-                path   => "/etc/systemd/system/multi-user.target.wants/openvpn@${title}.service",
+                path   => "/etc/systemd/system/multi-user.target.wants/${service_basename}@${title}.service",
             }
         }
 
@@ -156,6 +168,7 @@ define openvpn::client::generic
     if $l_manage_monit {
         openvpn::monit { $title:
             enable_service => $enable_service,
+            service_type   => $monit_service_type,
         }
     }
 
