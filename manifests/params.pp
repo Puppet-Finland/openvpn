@@ -74,7 +74,7 @@ class openvpn::params {
 
     # In practice only RedHat derivatives have selinux enabled; however, with this construct
     # we can easily add support for Debian by adding the default_sel* parameters above.
-    if $::facts['kernel'] == 'Linux' {
+    if $::facts['kernel'] == 'Linux' and $::selinux {
         if $::facts['os']['selinux']['enabled'] {
             $seluser = $default_seluser
             $selrole = $default_selrole
