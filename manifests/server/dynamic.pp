@@ -75,13 +75,15 @@ define openvpn::server::dynamic
     if $use_puppetcerts {
         openvpn::config::puppetcerts { $title: }
         openvpn::config::certs { $title:
-            manage_dh    => true,
-            manage_certs => false,
+            manage_dh           => true,
+            manage_certs        => false,
+            manage_client_certs => false,
         }
     } else {
         openvpn::config::certs { $title:
-            manage_dh    => true,
-            manage_certs => true
+            manage_dh           => true,
+            manage_certs        => true,
+            manage_client_certs => false,
         }
     }
 }
