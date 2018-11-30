@@ -13,6 +13,10 @@
 #   Remote VPN endpoint's IP address.
 # [*remote_port*]
 #   Remote VPN endpoint's port.
+# [*float*]
+#   Allow remote peer to change its IP. Useful when the inbound packets do not
+#   always arrive from the --remote address. Valid values are true and false
+#   (default).
 # [*tunif*]
 #   The name of the tunnel interface to use. The default value is 'tun5'.
 # [*use_puppetcerts*]
@@ -45,6 +49,7 @@ define openvpn::client::dynamic
     Boolean          $manage_packetfilter = true,
     Boolean          $manage_monit = true,
     Integer          $remote_port = 1194,
+    Boolean          $float = false,
     String           $tunif = 'tun5',
     Boolean          $use_puppetcerts = true,
     Boolean          $enable_service = true,
@@ -64,6 +69,7 @@ define openvpn::client::dynamic
         files_baseurl       => $files_baseurl,
         remote_ip           => $remote_ip,
         remote_port         => $remote_port,
+        float               => $float,
         enable_service      => $enable_service,
         tunif               => $tunif,
         username            => $username,

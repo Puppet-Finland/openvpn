@@ -17,6 +17,7 @@ define openvpn::client::generic
     String            $tunif='tun10',
     Optional[String]  $remote_ip = undef,
     Optional[Integer] $remote_port = undef,
+    Optional[Boolean] $float = undef,
     Optional[String]  $clientname = undef,
     Optional[String]  $username = undef,
     Optional[String]  $password = undef,
@@ -68,6 +69,13 @@ define openvpn::client::generic
 
     file { $status:
         seltype => $::openvpn::params::seltype_rw,
+    }
+
+    # Setup float as necessary
+    $float_line = $float ? {
+        default => undef,
+        false   => undef,
+        true    => 'float',
     }
 
     # Configure up and down scripts as necessary

@@ -1,7 +1,7 @@
 
 client
 remote <%= @remote_ip %> <%= @remote_port %>
-
+<%= @float_line %>
 proto udp
 # We need to define a static interface to configure firewalling properly
 dev <%= @tunif %>
