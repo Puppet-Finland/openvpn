@@ -73,7 +73,14 @@ define openvpn::server::generic
         $source = "${l_files_baseurl}/openvpn-${title}-${::fqdn}.conf"
         $content = undef
     }
-    $config = "${::openvpn::params::config_dir}/${title}.conf"
+
+    if $::openvpn::params::config_split {
+        $basedir = $::openvpn::params::server_config_dir
+    } else {
+        $basedir = $::openvpn::params::config_dir
+    }
+
+    $config = "${basedir}/${title}.conf"
 
     # Add the active configuration file
     file { "openvpn-${title}.conf":
@@ -86,11 +93,12 @@ define openvpn::server::generic
 
     # Enable the service by default - it is unlikely that we'd want to launch 
     # server instances manually.
+    $service = $::openvpn::params::server_service
     if str2bool($::has_systemd) {
         file { "openvpn@${title}.service":
             ensure  => link,
-            path    => "/etc/systemd/system/multi-user.target.wants/openvpn@${title}.service",
-            target  => '/usr/lib/systemd/system/openvpn@.service',
+            path    => "/etc/systemd/system/multi-user.target.wants/${service}@${title}.service",
+            target  => "/usr/lib/systemd/system/${service}@.service",
             require => File["openvpn-${title}.conf"],
         }
     }
@@ -107,8 +115,13 @@ define openvpn::server::generic
     }
 
     if $manage_monit {
+        $monit_service_type = $::openvpn::params::config_split ? {
+            true    => 'server',
+            default => undef,
+        }
         openvpn::monit { $title:
             enable_service => true,
+            service_type   => $monit_service_type,
         }
     }
 }

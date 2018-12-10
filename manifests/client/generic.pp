@@ -39,7 +39,7 @@ define openvpn::client::generic
     # Manage various operating system differences
     $ext = $::openvpn::params::config_ext
 
-    if $use_client_service {
+    if $::openvpn::params::config_split {
         $basedir          = "${::openvpn::params::config_dir}/client"
         $service_basename = 'openvpn-client'
         $monit_service_type = 'client'

@@ -25,13 +25,13 @@ key "<%= scope['openvpn::params::config_dir_esc'] %>\\<%= @title %>.key"
 auth-user-pass "<%= scope['openvpn::params::config_dir_esc'] %>\\<%= @title %>.pass"
 <% end -%>
 <% else -%>
-ca <%= scope['openvpn::params::config_dir'] %>/<%= @title %>-ca.crt
-tls-auth <%= scope['openvpn::params::config_dir'] %>/<%= @title %>-ta.key 1
+ca <%= @basedir %>/<%= @title %>-ca.crt
+tls-auth <%= @basedir %>/<%= @title %>-ta.key 1
 <% if @username.nil? -%>
-cert <%= scope['openvpn::params::config_dir'] %>/<%= @title %>.crt
-key <%= scope['openvpn::params::config_dir'] %>/<%= @title %>.key
+cert <%= @basedir %>/<%= @title %>.crt
+key <%= @basedir %>/<%= @title %>.key
 <% else -%>
-auth-user-pass <%= scope['openvpn::params::config_dir'] %>/<%= @title %>.pass
+auth-user-pass <%= @basedir %>/<%= @title %>.pass
 <% end -%>
 <% end -%>
 

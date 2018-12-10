@@ -83,6 +83,7 @@ define openvpn::client::dynamic
         openvpn::config::certs { $title:
             manage_dh    => false,
             manage_certs => false,
+            role         => 'client',
         }
     } else {
         # Manage credentials file if we're using password authentication
@@ -90,6 +91,7 @@ define openvpn::client::dynamic
             openvpn::config::passwordauth { $title:
                 username => $username,
                 password => $password,
+                role     => 'client',
             }
             $manage_client_certs = false
 
@@ -104,6 +106,7 @@ define openvpn::client::dynamic
             manage_certs        => true,
             manage_client_certs => $manage_client_certs,
             files_baseurl       => $files_baseurl,
+            role                => 'client',
         }
     }
 }

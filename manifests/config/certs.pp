@@ -16,21 +16,34 @@
 # [*manage_client_certs*]
 #   Manage client's private key and certificate. Valid values are true and 
 #   false.
+# [*role*]
+#   Connection type. Either 'client' or 'server'. Affects location of the
+#   certificate files on some platforms.
 #
 define openvpn::config::certs
 (
-    Boolean          $manage_dh,
-    Boolean          $manage_certs,
-    Boolean          $manage_client_certs,
-    Optional[String] $files_baseurl = undef
+    Boolean                 $manage_dh,
+    Boolean                 $manage_certs,
+    Boolean                 $manage_client_certs,
+    Enum['client','server'] $role,
+    Optional[String]        $files_baseurl = undef,
 )
 {
     $l_files_baseurl = openvpn::baseurl($files_baseurl)
 
+    if $::openvpn::params::config_split {
+        $basedir = $role ? {
+            'client' => $::openvpn::params::client_config_dir,
+            'server' => $::openvpn::params::server_config_dir,
+        }
+    } else {
+        $basedir = $::openvpn::params::config_dir
+    }
+
     # Special case path for Windows
     $config_dir = $::kernel ? {
-        'windows' => "${::openvpn::params::config_dir}\\",
-        default   => "${::openvpn::params::config_dir}/"
+        'windows' => "${basedir}\\",
+        default   => "${basedir}/"
     }
 
     # Use conveniently short variable names to improve readability

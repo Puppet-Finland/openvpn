@@ -14,11 +14,11 @@ status <%= @title %>-status.log
 verb 4
 
 # Certificates and keys
-ca <%= scope['openvpn::params::config_dir'] %>/<%= @title %>-ca.crt
-cert <%= scope['openvpn::params::config_dir'] %>/<%= @title %>.crt
-key <%= scope['openvpn::params::config_dir'] %>/<%= @title %>.key
-dh <%= scope['openvpn::params::config_dir'] %>/<%= @title %>-dh.pem
-tls-auth <%= scope['openvpn::params::config_dir'] %>/<%= @title %>-ta.key 0
+ca <%= @basedir %>/<%= @title %>-ca.crt
+cert <%= @basedir %>/<%= @title %>.crt
+key <%= @basedir %>/<%= @title %>.key
+dh <%= @basedir %>/<%= @title %>-dh.pem
+tls-auth <%= @basedir %>/<%= @title %>-ta.key 0
 
 max-clients <%= @max_clients %>
 client-config-dir <%= @title %>-ccd

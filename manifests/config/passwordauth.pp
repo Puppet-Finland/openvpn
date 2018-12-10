@@ -13,19 +13,32 @@
 #   automatic connections. No default value.
 # [*password*]
 #   This client's password.
+# [*role*]
+#   Connection type. Either 'client' or 'server'. Affects location of the
+#   password file on some platforms.
 #
 define openvpn::config::passwordauth
 (
-    String $username,
-    String $password
+    String                  $username,
+    String                  $password,
+    Enum['client','server'] $role,
 )
 {
     include ::openvpn::params
 
+    if $::openvpn::params::config_split {
+        $basedir = $role ? {
+            'client' => $::openvpn::params::client_config_dir,
+            'server' => $::openvpn::params::server_config_dir,
+        }
+    } else {
+        $basedir = $::openvpn::params::config_dir
+    }
+
     # Special case path for Windows
     $passfile = $::kernel ? {
-        'windows' => "${::openvpn::params::config_dir}\\${title}.pass",
-        default   => "${::openvpn::params::config_dir}/${title}.pass"
+        'windows' => "${basedir}\\${title}.pass",
+        default   => "${basedir}/${title}.pass"
     }
 
     file { "openvpn-${title}.pass":

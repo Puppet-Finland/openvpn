@@ -72,6 +72,25 @@ class openvpn::params {
         }
     }
 
+    # Determine if client and server configuration directories have been forcibly split.
+    # This requires the LSB package to be installed.
+    case $::lsbdistcodename {
+        /(TwentyNine)/: {
+            $client_config_dir = "${config_dir}/client"
+            $server_config_dir = "${config_dir}/server"
+            $config_split = true
+            $server_service = 'openvpn-server'
+            $client_service = 'openvpn-client'
+        }
+        default: {
+            $client_config_dir = $config_dir
+            $server_config_dir = $config_dir
+            $config_split = false
+            $server_service = 'openvpn'
+            $client_service = 'openvpn'
+        }
+    }
+
     # In practice only RedHat derivatives have selinux enabled; however, with this construct
     # we can easily add support for Debian by adding the default_sel* parameters above.
     if $::facts['kernel'] == 'Linux' and $::selinux {

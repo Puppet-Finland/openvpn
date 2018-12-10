@@ -78,12 +78,14 @@ define openvpn::server::dynamic
             manage_dh           => true,
             manage_certs        => false,
             manage_client_certs => false,
+            role                => 'server',
         }
     } else {
         openvpn::config::certs { $title:
             manage_dh           => true,
             manage_certs        => true,
             manage_client_certs => false,
+            role                => 'server',
         }
     }
 }
