@@ -81,6 +81,8 @@ class openvpn::params {
             $config_split = true
             $server_service = 'openvpn-server'
             $client_service = 'openvpn-client'
+            # There won't be any pidfile: use monit process matching instead
+            $use_monit_procmatch = true
         }
         default: {
             $client_config_dir = $config_dir

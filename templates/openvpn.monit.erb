@@ -1,5 +1,5 @@
 ### THIS FILE IS MANAGED BY PUPPET. ANY MANUAL CHANGES WILL GET OVERWRITTEN.
 
-check process openvpn-<%= @title %> with pidfile <%= @pidfile %>
+check process openvpn-<%= @title %> <%= @match %>
     start "<%= @service_start %>"
     stop "<%= @service_stop %>"

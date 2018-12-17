@@ -32,6 +32,15 @@ define openvpn::monit
         $pidfile = "${::openvpn::params::pid_dir}/${title}.pid"
     }
 
+    # This will fail if there are client and server configs with the same name.
+    # But there is no easy workaround for that, unless we force creation of
+    # a pidfile, which is its own can of worms with different systemd versions.
+    if $::openvpn::params::use_monit_procmatch {
+        $match = "matching \"/usr/sbin/openvpn .* --config ${title}.conf\""
+    } else {
+        $match = "with pidfile ${pidfile}"
+    }
+
     # On systemd-enabled distros we can manage individual VPN connections 
     # separately, without having to restart all connections if one of them goes 
     # down. More recent packages on systemd distros distinguish between client
