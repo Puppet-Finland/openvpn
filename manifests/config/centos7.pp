@@ -9,7 +9,7 @@ class openvpn::config::centos7 inherits openvpn::params {
 
     $services.each |$service| {
         ::systemd::service_fragment { "${service}@":
-            ensure        => 'present',
+            ensure        => 'absent',
             service_name  => "${service}@",
             template_path => 'openvpn/openvpn@.service.centos7.erb',
         }
