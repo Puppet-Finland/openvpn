@@ -80,10 +80,12 @@ define openvpn::client::dynamic
 
     if $use_puppetcerts {
         openvpn::config::puppetcerts { $title: }
+        # This class is only used for installing ta.key
         openvpn::config::certs { $title:
-            manage_dh    => false,
-            manage_certs => false,
-            role         => 'client',
+            manage_dh           => false,
+            manage_certs        => false,
+            manage_client_certs => false,
+            role                => 'client',
         }
     } else {
         # Manage credentials file if we're using password authentication
