@@ -75,7 +75,7 @@ class openvpn::params {
     # Determine if client and server configuration directories have been forcibly split.
     # This requires the LSB package to be installed.
     case $::lsbdistcodename {
-        /(TwentyNine|bionic)/: {
+        /(Thirty|TwentyNine|bionic)/: {
             $client_config_dir = "${config_dir}/client"
             $server_config_dir = "${config_dir}/server"
             $config_split = true
