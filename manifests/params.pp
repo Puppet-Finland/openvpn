@@ -17,7 +17,7 @@ class openvpn::params {
             $service_name = 'openvpn'
             $pid_dir = '/var/run/openvpn'
             $pidfile_prefix = undef
-            $build_deps = [ 'lzo-devel', 'openssl-devel', 'pam-devel', 'pkcs11-helper-devel', 'gnutls-devel', 'autoconf', 'libtool', 'make', 'cmake' ]
+            $build_deps = [ 'lzo-devel', 'openssl-devel', 'pam-devel', 'pkcs11-helper-devel', 'gnutls-devel', 'autoconf', 'libtool', 'make', 'cmake' ] # lint:ignore:140chars
             $config_dir = '/etc/openvpn'
             $nobody = 'nobody'
             $nogroup = 'nobody'
@@ -114,7 +114,7 @@ class openvpn::params {
             $seltype_rw = undef
     }
 
-    if str2bool($::has_systemd) {
+    if $::systemd {
         $service_start = "${::os::params::systemctl} start ${service_name}"
         $service_stop = "${::os::params::systemctl} stop ${service_name}"
     } else {

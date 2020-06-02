@@ -110,7 +110,7 @@ define openvpn::client::generic
     # <https://bugzilla.redhat.com/show_bug.cgi?id=746472>
     # <https://ask.fedoraproject.org/en/question/23085/how-to-start-openvpn-service-at-boot-time/>
     #
-    if str2bool($::has_systemd) {
+    if $::systemd {
 
         # Add the configuration file
         file { "openvpn-${title}.conf":

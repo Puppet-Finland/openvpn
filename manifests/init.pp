@@ -91,9 +91,6 @@ class openvpn
             ::openvpn::config::systemd { $::lsbdistcodename: }
         }
     }
-    if ($facts['os']['family'] == 'RedHat') and ($facts['os']['release']['major'] == '7') {
-        include ::openvpn::config::centos7
-    }
 
     class { '::openvpn::service':
         ensure => $ensure_service,

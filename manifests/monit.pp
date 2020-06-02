@@ -45,7 +45,7 @@ define openvpn::monit
     # separately, without having to restart all connections if one of them goes 
     # down. More recent packages on systemd distros distinguish between client
     # and server connections as well.
-    if str2bool($::has_systemd) {
+    if $::systemd {
         if $service_type {
             $service_start = "${::openvpn::params::service_start}-${service_type}@${title}"
             $service_stop = "${::openvpn::params::service_stop}-${service_type}@${title}"

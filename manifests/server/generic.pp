@@ -94,7 +94,7 @@ define openvpn::server::generic
     # Enable the service by default - it is unlikely that we'd want to launch 
     # server instances manually.
     $service = $::openvpn::params::server_service
-    if str2bool($::has_systemd) {
+    if $::systemd {
         file { "openvpn@${title}.service":
             ensure  => link,
             path    => "/etc/systemd/system/multi-user.target.wants/${service}@${title}.service",

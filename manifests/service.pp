@@ -16,7 +16,7 @@ class openvpn::service
     # startup script from starting all OpenVPN connections on boot, as happens
     # by default on Debian 8.x unless /etc/default/openvpn is modified.
     #
-    if str2bool($::has_systemd) {
+    if $::systemd {
         $service_enable = false
         $service_ensure = undef
     } else {
